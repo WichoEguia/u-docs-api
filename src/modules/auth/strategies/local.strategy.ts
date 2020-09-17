@@ -1,4 +1,4 @@
-import { User } from '../../modules/users/services/users.service';
+import { User } from '../../users/services/users.service';
 import { AuthService } from '../services/auth.service';
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
