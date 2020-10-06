@@ -5,27 +5,6 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  users = [
-    {
-      id: 1,
-      username: 'john',
-      password: 'changeme',
-      email: 'webito@mail.com'
-    },
-    {
-      id: 2,
-      username: 'chris',
-      password: 'secret',
-      email: 'panito@mail.com'
-    },
-    {
-      id: 3,
-      username: 'maria',
-      password: 'guess',
-      email: 'quesito@mail.com'
-    },
-  ];
-
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>

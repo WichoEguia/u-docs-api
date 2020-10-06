@@ -10,9 +10,18 @@ import { AppController } from './app.controller';
   imports: [
     AuthModule,
     UsersModule,
-    TypeOrmModule.forRoot({
-      autoLoadEntities: true
-    })
+    TypeOrmModule.forRoot(
+      {
+        "type": "mysql",
+        "host": "db",
+        "port": 3306,
+        "username": "root",
+        "password": "demodemo",
+        "database": "u-docs",
+        "synchronize": true,
+        "entities": ["dist/**/*.entity.js"]
+      }
+    )
   ],
   controllers: [AppController]
 })
