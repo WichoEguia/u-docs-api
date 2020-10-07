@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 enum userRole {
   student = 1,
-  teacher = 2
+  teacher = 2,
 }
 
 @Entity()
@@ -15,7 +15,7 @@ export class User {
 
   @Column('text')
   password: string;
-  
+
   @Column('text')
   email: string;
 
