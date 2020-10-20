@@ -3,9 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { HttpStatus } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/dto/create-user.dto';
+import { User } from 'src/entities/user.entity';
+import { UsersService } from 'src/common/users/users.service';
 
 import * as bcrypt from 'bcrypt';
 
@@ -69,10 +69,10 @@ export class AuthService {
 
   public async login(user: User) {
     const payload = {
-      id: user.id,
+      id: user.idUser,
       username: user.username,
       email: user.email,
-      isActive: user.isActive,
+      isActive: user.is_active,
       role: user.role,
     };
 

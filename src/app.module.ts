@@ -1,9 +1,8 @@
-import { ArticlesModule } from "./articles/atricles.module";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { AuthModule } from "./auth/auth.module";
-import { UsersModule } from "./users/users.module";
+import { AuthModule } from "src/common/auth/auth.module";
+import { UsersModule } from "src/common/users/users.module";
 
 import { AppController } from "./app.controller";
 
@@ -11,7 +10,6 @@ import { AppController } from "./app.controller";
   imports: [
     AuthModule,
     UsersModule,
-    ArticlesModule,
     TypeOrmModule.forRoot({
       type: "mysql",
       host: "localhost",

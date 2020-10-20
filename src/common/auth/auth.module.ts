@@ -4,9 +4,9 @@ import { UsersModule } from "../users/users.module";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 
-import { LocalStrategy } from "./strategies/local.strategy";
-import { JwtStrategy } from "./strategies/jwt.strategy";
-import { jwtConstants } from "../constants";
+import { LocalStrategy } from "src/common/auth/strategies/local.strategy";
+import { JwtStrategy } from "src/common/auth/strategies/jwt.strategy";
+import { jwtConstants } from "src/constants";
 
 import { AuthController } from "./auth.controller";
 
