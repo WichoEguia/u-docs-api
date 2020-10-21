@@ -3,13 +3,15 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 import * as bodyParser from "body-parser";
 import { AppModule } from "./app.module";
+import { HttpExceptionFilter } from "./filters/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+
   app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-  await app.listen(3000);
-
+  app.useGlobalFilters(new HttpExceptionFilter());
+  
   const options = new DocumentBuilder()
     .setTitle("U-Docs")
     .setDescription("Plataforma para impartir capacitaciones")
@@ -17,5 +19,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("api", app, document);
+  
+  await app.listen(3000);
 }
 bootstrap();

@@ -1,3 +1,4 @@
+import { TrainingTypes } from './../constants';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 
 import { User } from './user.entity';
@@ -19,9 +20,10 @@ export class Training {
   description: string;
 
   @Column({
-    default: false
+    type: 'enum',
+    enum: TrainingTypes
   })
-  public: boolean;
+  type: string;
 
   @Column({
     type: 'integer',
@@ -73,6 +75,12 @@ export class Token {
     type: 'timestamp'
   })
   expiration_date: string;
+
+  @Column({
+    type: 'boolean',
+    default: true
+  })
+  is_active: boolean;
 
   @OneToOne(() => Training)
   @JoinColumn({

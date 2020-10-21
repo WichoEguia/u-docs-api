@@ -7,3 +7,8 @@ export enum AppRoles {
   INSTRUCTOR = 'Instructor',
   STUDENT = 'Student'
 }
+
+export enum TrainingTypes {
+  PRIVATE = 'Private',
+  PUBLIC = 'Public'
+}

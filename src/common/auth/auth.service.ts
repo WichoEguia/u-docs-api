@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { HttpStatus } from '@nestjs/common';
 import { HttpException } from '@nestjs/common';
 
-import { CreateUserDto } from 'src/dto/create-user.dto';
+import { CreateUserDto } from 'src/dto';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/common/users/users.service';
 
@@ -27,7 +27,7 @@ export class AuthService {
       return createdUser;
     } catch (error) {
       throw new HttpException(
-        'Ha ocurrido un error',
+        'Ha ocurrido un error al procesar su solicitud',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
