@@ -1,5 +1,7 @@
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+
 import { TrainingsService } from './trainings.service';
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { CreateTrainingDto } from 'src/dto/training.dto';
 import { TrainingTypes } from 'src/constants';
 
 @Controller('trainings')
@@ -30,5 +32,12 @@ export class Trainings {
       courses,
       count: courses.length
     }
+  }
+
+  @Post()
+  async create(
+    @Body() trainingData: CreateTrainingDto
+  ) {
+    return await this.trainingService.create(trainingData);
   }
 }

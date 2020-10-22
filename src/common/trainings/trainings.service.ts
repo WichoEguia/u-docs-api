@@ -7,10 +7,13 @@ import { Training } from 'src/entities';
 import { TrainingTypes } from './../../constants';
 import { CreateTrainingDto } from './../../dto/training.dto';
 
+import { UsersService } from 'src/common/users/users.service';
+
 @Injectable()
 export class TrainingsService {
   constructor(
-    @InjectRepository(Training) private trainingRepository: Repository<Training>
+    @InjectRepository(Training) private trainingRepository: Repository<Training>,
+    private usersService: UsersService
   ) {}
 
   async findAll(type: TrainingTypes, instructorId?: number): Promise<Training[]> {
@@ -62,11 +65,15 @@ export class TrainingsService {
   }
 
   async create(trainingData: CreateTrainingDto): Promise<Training> {
-    try {
-      const newTraining = this.trainingRepository.create(trainingData);
-      return newTraining;
-    } catch (error) {
-      
-    }
+    const newTraining = this.trainingRepository.create();
+
+    newTraining.title = trainingData.title;
+    newTraining.description = trainingData.description;
+    newTraining.type = trainingData.type;
+    newTraining.storage = trainingData.storage;
+    newTraining.user = await this.usersService.findOne(null, trainingData.idUser);
+
+    await this.trainingRepository.save(newTraining);
+    return newTraining;
   }
 }

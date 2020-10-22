@@ -5,4 +5,5 @@ export class CreateTrainingDto {
   description: string;
   type: TrainingTypes;
   storage: number;
+  idUser: number;
 }

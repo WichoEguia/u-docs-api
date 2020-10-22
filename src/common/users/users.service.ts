@@ -62,8 +62,21 @@ export class UsersService {
     return findedUser;
   }
 
-  async findOne(email: string): Promise<User> {
-    const searchResult = await this.findByCriteria({ email });
+  async findOne(email?: string, id?: number): Promise<User> {
+    let searchCriteria = null;
+    
+    if (email) {
+      searchCriteria = { email };
+    } else if (id) {
+      searchCriteria = { idUser: id };
+    } else {
+      throw new HttpException(
+        'Estaablesca un parametro de busqueda',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const searchResult = await this.findByCriteria(searchCriteria);
     if (!searchResult) {
       throw new HttpException(
         'El usuario no existe en nuestra base de datos',
