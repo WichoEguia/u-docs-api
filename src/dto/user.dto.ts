@@ -10,3 +10,12 @@ export class CreateUserDto {
   phone?: string;
   avatar?: string;
 }
+
+export class UpdateUserDto {
+  username: string;
+  password: string;
+  company?: string;
+  age?: number;
+  phone?: string;
+  avatar?: string;
+}

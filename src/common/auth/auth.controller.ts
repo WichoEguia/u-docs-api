@@ -17,19 +17,25 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() userData: CreateUserDto): Promise<User> {
+  async register(
+    @Body() userData: CreateUserDto
+  ): Promise<User> {
     return await this.authService.register(userData);
   }
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req): Promise<{ user: User, access_token: string }> {
+  async login(
+    @Request() req
+  ): Promise<{ user: User, access_token: string }> {
     return this.authService.login(req.user);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  async profile(@Request() req): Promise<User> {
+  async profile(
+    @Request() req
+  ): Promise<User> {
     return req.user
   }
 }

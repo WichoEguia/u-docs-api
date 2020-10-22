@@ -14,12 +14,16 @@ export class Trainings {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number) {
+  async findById(
+    @Param('id') id: number
+  ) {
     return await this.trainingService.findById(id);
   }
 
   @Get()
-  async search(@Query('title') title: string) {
+  async search(
+    @Query('title') title: string
+  ) {
     const courses = await this.trainingService.findByName(title);
 
     return {
