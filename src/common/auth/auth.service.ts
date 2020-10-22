@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { HttpStatus } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 
-import { CreateUserDto } from 'src/dto';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/common/users/users.service';
+import { CreateUserDto } from 'src/dto';
 
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
@@ -17,20 +15,15 @@ export class AuthService {
   ) {}
 
   public async register(userData: CreateUserDto): Promise<User> {
-    try {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      const createdUser = await this.usersService.create({
-        ...userData,
-        password: hashedPassword,
-      });
-      createdUser.password = undefined;
-      return createdUser;
-    } catch (error) {
-      throw new HttpException(
-        'Ha ocurrido un error al procesar su solicitud',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+
+    const createdUser = await this.usersService.create({
+      ...userData,
+      password: hashedPassword,
+    });
+    createdUser.password = undefined;
+
+    return createdUser;
   }
 
   public async authenticateUser(
@@ -41,6 +34,7 @@ export class AuthService {
       const user = await this.usersService.findOne(email);
       await this.validatePassword(plainTextPaword, user.password);
       user.password = undefined;
+
       return user;
     } catch (error) {
       throw new HttpException(
@@ -74,6 +68,10 @@ export class AuthService {
       email: user.email,
       isActive: user.is_active,
       role: user.role,
+      company: user.company,
+      age: user.age,
+      phone: user.phone,
+      avatar: user.avatar
     };
 
     return {

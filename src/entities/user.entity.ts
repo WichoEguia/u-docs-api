@@ -1,5 +1,5 @@
 import { Training } from './training.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { AppRoles } from 'src/constants';
 import { Inscription } from './inscription.entity';
 
@@ -56,7 +56,7 @@ export class User {
     length: 20,
     nullable: true
   })
-  phone: number;
+  phone: string;
 
   @Column({
     type: 'varchar',
@@ -65,16 +65,18 @@ export class User {
   })
   avatar: string;
 
-  @Column({
-    type: 'timestamp'
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)"
   })
-  created_at: string;
+  created_at: Date;
 
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
-    nullable: true
+    nullable: true,
+    onUpdate: "CURRENT_TIMESTAMP(6)"
   })
-  updated_at: string;
+  updated_at: Date;
 
   @OneToMany(() => Training, training => training.user)
   trainings: Training[];

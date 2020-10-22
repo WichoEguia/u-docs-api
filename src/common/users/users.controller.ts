@@ -1,8 +1,9 @@
-import { Controller, Request, Get, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, Query } from '@nestjs/common';
 
 import { User } from 'src/entities/user.entity';
 import { UsersService } from './users.service';
+
+import { AppRoles } from 'src/constants';
 
 @Controller('users')
 export class UsersController {
@@ -11,13 +12,7 @@ export class UsersController {
   ) {}
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.uaersService.findAll();
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('profile')
-  async profile(@Request() req): Promise<User> {
-    return req.user
+  async findAll(@Query('role') role?: AppRoles): Promise<User[]> {
+    return this.uaersService.findAll(role);
   }
 }

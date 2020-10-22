@@ -32,12 +32,14 @@ export class Training {
   storage: number;
 
   @Column({
-    type: 'float'
+    type: 'float',
+    default: 900
   })
   price: number;
 
   @Column({
-    type: 'boolean'
+    type: 'boolean',
+    default: true
   })
   is_active: boolean;
 

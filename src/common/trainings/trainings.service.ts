@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like, Repository } from "typeorm";
 
 import { Training } from 'src/entities';
 import { TrainingTypes } from './../../constants';
+import { CreateTrainingDto } from './../../dto/training.dto';
 
 @Injectable()
 export class TrainingsService {
@@ -11,35 +13,29 @@ export class TrainingsService {
     @InjectRepository(Training) private trainingRepository: Repository<Training>
   ) {}
 
-  async findAll(type: TrainingTypes): Promise<Training[]> {
-    try {
-      return this.trainingRepository.find({ type });
-    } catch (error) {
-      throw new HttpException(
-        'Ha ocurrido un error al procesar su solicitud',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+  async findAll(type: TrainingTypes, instructorId?: number): Promise<Training[]> {
+    if (instructorId) {
+      return this.trainingRepository.find({
+        where: {
+          type,
+          idUser: instructorId
+        }
+      });
     }
+    return this.trainingRepository.find({ type });
   }
 
   async findById(id: number): Promise<Training> {
-    try {
-      const training = this.trainingRepository.findOne(id);
-  
-      if (training) {
-        return training;
-      }
-  
-      throw new HttpException(
-        'No esxiste el curso solicitado',
-        HttpStatus.NOT_FOUND
-      );
-    } catch (error) {
-      throw new HttpException(
-        'Ha ocurrido un error al procesar su solicitud',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+    const training = this.trainingRepository.findOne(id);
+
+    if (training) {
+      return training;
     }
+
+    throw new HttpException(
+      'No esxiste el curso solicitado',
+      HttpStatus.NOT_FOUND
+    );
   }
 
   async findByName(name: string): Promise<Training[]> {
@@ -62,6 +58,15 @@ export class TrainingsService {
         'Ha ocurrido un error al procesar su solicitud',
         HttpStatus.INTERNAL_SERVER_ERROR
       );
+    }
+  }
+
+  async create(trainingData: CreateTrainingDto): Promise<Training> {
+    try {
+      const newTraining = this.trainingRepository.create(trainingData);
+      return newTraining;
+    } catch (error) {
+      
     }
   }
 }
