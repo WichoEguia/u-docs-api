@@ -5,7 +5,7 @@ import { CreateTrainingDto } from 'src/dto/training.dto';
 import { TrainingTypes } from 'src/constants';
 
 @Controller('trainings')
-export class Trainings {
+export class TrainingsController {
   constructor(
     private trainingService: TrainingsService
   ) {}
