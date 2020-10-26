@@ -34,10 +34,11 @@ export class Trainings {
     }
   }
 
-  @Post()
+  @Post('idUser')
   async create(
-    @Body() trainingData: CreateTrainingDto
+    @Body() trainingData: CreateTrainingDto,
+    @Param('idUser') idUser: number
   ) {
-    return await this.trainingService.create(trainingData);
+    return await this.trainingService.create(trainingData, idUser);
   }
 }

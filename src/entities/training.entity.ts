@@ -1,5 +1,5 @@
 import { TrainingTypes } from './../constants';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, CreateDateColumn } from "typeorm";
 
 import { User } from './user.entity';
 import { Inscription } from './inscription.entity';
@@ -43,16 +43,18 @@ export class Training {
   })
   is_active: boolean;
 
-  @Column({
-    type: 'timestamp'
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)"
   })
-  created_at: string;
+  created_at: Date;
 
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
-    nullable: true
+    nullable: true,
+    onUpdate: "CURRENT_TIMESTAMP(6)"
   })
-  updated_at: string;
+  updated_at: Date;
 
   @ManyToOne(() => User, user => user.trainings)
   @JoinColumn({ name: "idUser" })

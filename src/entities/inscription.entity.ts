@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 import { User } from 'src/entities/user.entity';
 import { Training } from "./training.entity";
@@ -20,16 +20,18 @@ export class Inscription {
   })
   user: User;
 
-  @Column({
-    type: 'timestamp'
+  @CreateDateColumn({
+    type: "timestamp",
+    default: () => "CURRENT_TIMESTAMP(6)"
   })
-  created_at: string;
+  created_at: Date;
 
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
-    nullable: true
+    nullable: true,
+    onUpdate: "CURRENT_TIMESTAMP(6)"
   })
-  updated_at: string;
+  updated_at: Date;
 
   @Column({
     default: true
