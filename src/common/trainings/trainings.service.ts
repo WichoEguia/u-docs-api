@@ -4,8 +4,9 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like, Repository } from "typeorm";
 
+import { SearchTrainingTypes } from './../../constants';
+
 import { Training } from 'src/entities';
-import { TrainingTypes } from './../../constants';
 import { CreateTrainingDto } from './../../dto/training.dto';
 
 @Injectable()
@@ -15,15 +16,28 @@ export class TrainingsService {
     private userService: UsersService
   ) {}
 
-  async findAll(type: TrainingTypes, instructorId?: number): Promise<Training[]> {
-    if (instructorId) {
+  async findAll(type: SearchTrainingTypes, idInstructor?: number): Promise<Training[]> {
+    if (idInstructor) {
+      if (type == SearchTrainingTypes.ALL) {
+        return this.trainingRepository.find({
+          where: {
+            idUser: idInstructor
+          }
+        });
+      }
+
       return this.trainingRepository.find({
         where: {
           type,
-          idUser: instructorId
+          idUser: idInstructor
         }
       });
     }
+
+    if (type == SearchTrainingTypes.ALL) {
+      return this.trainingRepository.find();
+    }
+
     return this.trainingRepository.find({ type });
   }
 
@@ -43,8 +57,7 @@ export class TrainingsService {
   async findByName(name: string): Promise<Training[]> {
     try {
       const findedTrainings = this.trainingRepository.find({
-        title: Like(`%${name.trim()}%`),
-        type: TrainingTypes.PUBLIC
+        title: Like(`%${name.trim()}%`)
       });
   
       if (findedTrainings) {

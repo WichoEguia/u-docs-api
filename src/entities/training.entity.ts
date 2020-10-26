@@ -26,18 +26,6 @@ export class Training {
   type: string;
 
   @Column({
-    type: 'integer',
-    default: 50
-  })
-  storage: number;
-
-  @Column({
-    type: 'float',
-    default: 900
-  })
-  price: number;
-
-  @Column({
     type: 'boolean',
     default: true
   })

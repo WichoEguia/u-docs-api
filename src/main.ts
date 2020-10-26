@@ -14,7 +14,7 @@ async function bootstrap() {
   
   const options = new DocumentBuilder()
     .setTitle("U-Docs")
-    .setDescription("Plataforma para impartir capacitaciones")
+    .setDescription("API para plataforma U-Docs. Una plataforma para impartir capacitaciones industriales.")
     .setVersion("1.0")
     .build();
   const document = SwaggerModule.createDocument(app, options);
