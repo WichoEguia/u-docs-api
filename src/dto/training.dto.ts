@@ -1,8 +1,8 @@
-import { SearchTrainingTypes } from "src/constants";
+import { TrainingTypes } from "src/constants";
 
 export class CreateTrainingDto {
   title: string;
   description: string;
-  type: SearchTrainingTypes;
+  type: TrainingTypes;
   storage: number;
 }

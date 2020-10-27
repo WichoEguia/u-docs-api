@@ -54,26 +54,22 @@ export class TrainingsService {
     );
   }
 
-  async findByName(name: string): Promise<Training[]> {
-    try {
-      const findedTrainings = this.trainingRepository.find({
-        title: Like(`%${name.trim()}%`)
-      });
-  
-      if (findedTrainings) {
-        return findedTrainings;
-      }
-  
-      throw new HttpException(
-        `No se encontró ningun curso que coincida con el titulo: ${name}`,
-        HttpStatus.NOT_FOUND
-      );
-    } catch (error) {
-      throw new HttpException(
-        'Ha ocurrido un error al procesar su solicitud',
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+  async findByText(text: string): Promise<Training[]> {
+    const findedTrainings = this.trainingRepository.find({
+      where: [
+        { title: Like(`%${text.trim()}%`) },
+        { description: Like(`%${text.trim()}%`) }
+      ]
+    });
+
+    if (findedTrainings) {
+      return findedTrainings;
     }
+
+    throw new HttpException(
+      `No se encontró ningun curso que coincida con el titulo: ${text}`,
+      HttpStatus.NOT_FOUND
+    );
   }
 
   async create(trainingData: CreateTrainingDto, idUser: number): Promise<Training> {

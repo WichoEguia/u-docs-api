@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query } from "@nestjs/common";
 
 import { SearchTrainingTypes } from 'src/constants';
 
@@ -13,7 +13,7 @@ export class TrainingsController {
 
   @Get()
   async findAll(
-    @Query('type') type: SearchTrainingTypes,
+    @Query('type') type: SearchTrainingTypes = SearchTrainingTypes.ALL,
     @Query('idInstructor') idInstructor?: number
   ) {
     if (idInstructor) {
@@ -22,30 +22,28 @@ export class TrainingsController {
     return await this.trainingService.findAll(type);
   }
 
-  @Get(':id')
+  @Get('search')
+  async search(
+    @Query('text') text: string
+  ) {
+    return await this.trainingService.findByText(text);
+  }
+
+  @Get('get/:id')
   async findById(
     @Param('id') id: number
   ) {
     return await this.trainingService.findById(id);
   }
 
-  @Get('search')
-  async search(
-    @Query('title') title: string
-  ) {
-    const courses = await this.trainingService.findByName(title);
-
-    return {
-      courses,
-      count: courses.length
-    }
-  }
-
-  @Post(':idUser')
+  @Post('create/:idUser')
   async create(
     @Body() trainingData: CreateTrainingDto,
     @Param('idUser') idUser: number
   ) {
-    return await this.trainingService.create(trainingData, idUser);
+    let trainingResponse = await this.trainingService.create(trainingData, idUser);
+    delete trainingResponse.user;
+
+    return trainingResponse;
   }
 }

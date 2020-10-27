@@ -19,19 +19,19 @@ export class UsersController {
     return this.usersService.findAll(role);
   }
 
-  @Get(':id')
-  async findOne(
-    @Param('id') id: number
-  ): Promise<User> {
-    return this.usersService.findOne(null, id);
-  }
-
   @Get('search')
   async search(
     @Query('username') username: string,
     @Query('email') email: string
   ) {
     return await this.usersService.search(email, username);
+  }
+
+  @Get('get/:id')
+  async findOne(
+    @Param('id') id: number
+  ): Promise<User> {
+    return this.usersService.findOne(null, id);
   }
 
   @Patch('update/:id')
