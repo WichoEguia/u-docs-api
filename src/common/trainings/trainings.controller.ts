@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 
 import { SearchTrainingTypes } from 'src/constants';
 
 import { TrainingsService } from './trainings.service';
 import { CreateTrainingDto } from 'src/dto/training.dto';
+import { ApiQuery } from "@nestjs/swagger";
 
 @Controller('trainings')
 export class TrainingsController {
@@ -12,6 +13,8 @@ export class TrainingsController {
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'type', enum: SearchTrainingTypes, required: false })
+  @ApiQuery({ name: 'idInstructor', required: false })
   async findAll(
     @Query('type') type: SearchTrainingTypes = SearchTrainingTypes.ALL,
     @Query('idInstructor') idInstructor?: number
@@ -23,6 +26,7 @@ export class TrainingsController {
   }
 
   @Get('search')
+  @ApiQuery({ name: 'text', required: true })
   async search(
     @Query('text') text: string
   ) {

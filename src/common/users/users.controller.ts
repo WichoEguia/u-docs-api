@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 
 import { User } from 'src/entities/user.entity';
 import { UsersService } from './users.service';
@@ -13,13 +14,16 @@ export class UsersController {
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'role', enum: AppRoles, required: false })
   async findAll(
-    @Query('role') role?: AppRoles
+    @Query('role') role: AppRoles = AppRoles.STUDENT
   ): Promise<User[]> {
     return this.usersService.findAll(role);
   }
 
   @Get('search')
+  @ApiQuery({ name: 'username', required: false })
+  @ApiQuery({ name: 'email', required: false })
   async search(
     @Query('username') username: string,
     @Query('email') email: string
