@@ -6,10 +6,10 @@ export class AppController {
   async hello() {
     return {
       name: "U-Docs",
-      description: "API para plataforma U-Docs. Una plataforma para impartir capacitaciones industriales.",
+      description: "API para plataforma U-Docs. Una plataforma para impartir capacitaciones industriales. 👌👌",
       authors: [
-        "Luis Eguía",
-        "Isaac Sandoval",
+        "Luis Eguía 🤓",
+        "Isaac Sandoval 🤓",
       ],
     };
   }

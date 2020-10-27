@@ -12,9 +12,3 @@ export enum TrainingTypes {
   PRIVATE = 'Private',
   PUBLIC = 'Public'
 }
-
-export enum SearchTrainingTypes {
-  ALL = 'All',
-  PRIVATE = 'Private',
-  PUBLIC = 'Public'
-}

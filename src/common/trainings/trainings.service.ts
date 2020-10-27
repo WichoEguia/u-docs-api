@@ -1,13 +1,15 @@
+import { UpdateTrainingDto } from './../../dto/training.dto';
 import { UsersService } from 'src/common/users/users.service';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like, Repository } from "typeorm";
 
-import { SearchTrainingTypes } from './../../constants';
+import { TrainingTypes } from 'src/constants';
 
 import { Training } from 'src/entities';
-import { CreateTrainingDto } from './../../dto/training.dto';
+import { CreateTrainingDto } from 'src/dto/training.dto';
+import { join } from 'path';
 
 @Injectable()
 export class TrainingsService {
@@ -16,13 +18,14 @@ export class TrainingsService {
     private userService: UsersService
   ) {}
 
-  async findAll(type: SearchTrainingTypes, idInstructor?: number): Promise<Training[]> {
+  async findAll(type: TrainingTypes, idInstructor?: number): Promise<Training[]> {
     if (idInstructor) {
-      if (type == SearchTrainingTypes.ALL) {
+      if (!type) {
         return this.trainingRepository.find({
           where: {
             idUser: idInstructor
-          }
+          },
+          relations: ['user']
         });
       }
 
@@ -30,15 +33,21 @@ export class TrainingsService {
         where: {
           type,
           idUser: idInstructor
-        }
+        },
+        relations: ['user']
       });
     }
 
-    if (type == SearchTrainingTypes.ALL) {
-      return this.trainingRepository.find();
+    if (!type) {
+      return this.trainingRepository.find({
+        relations: ['user']
+      });
     }
 
-    return this.trainingRepository.find({ type });
+    return this.trainingRepository.find({
+      where: { type },
+      relations: ['user']
+    });
   }
 
   async findById(id: number): Promise<Training> {
@@ -73,10 +82,39 @@ export class TrainingsService {
   }
 
   async create(trainingData: CreateTrainingDto, idUser: number): Promise<Training> {
-    const newTraining = this.trainingRepository.create(trainingData);
+    const newTraining = await this.trainingRepository.create(trainingData);
     newTraining.user = await this.userService.findOne(null, idUser);
 
     await this.trainingRepository.save(newTraining);
     return newTraining;
+  }
+
+  async update(idTraining: number, trainingData: UpdateTrainingDto): Promise<Training> {
+    const training = await this.findById(idTraining);
+    if (!training) {
+      throw new HttpException(
+        `No se encontró la capcitación con el id: ${idTraining}`,
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    training.title = trainingData.title || training.title,
+    training.description = trainingData.description || training.description
+
+    await this.trainingRepository.save(training);
+    return training;
+  }
+
+  async deactivate(idTraining: number) {
+    const training = await this.findById(idTraining);
+    if (training) {
+      throw new HttpException(
+        `No se encontró la capcitación con el id: ${idTraining}`,
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    training.is_active = false;
+    return training;
   }
 }

@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
 
-import { SearchTrainingTypes } from 'src/constants';
+import { TrainingTypes } from 'src/constants';
 
 import { TrainingsService } from './trainings.service';
-import { CreateTrainingDto } from 'src/dto/training.dto';
+import { CreateTrainingDto, UpdateTrainingDto } from 'src/dto/training.dto';
 import { ApiQuery } from "@nestjs/swagger";
 
 @Controller('trainings')
@@ -13,10 +13,10 @@ export class TrainingsController {
   ) {}
 
   @Get()
-  @ApiQuery({ name: 'type', enum: SearchTrainingTypes, required: false })
+  @ApiQuery({ name: 'type', enum: TrainingTypes, required: false })
   @ApiQuery({ name: 'idInstructor', required: false })
   async findAll(
-    @Query('type') type: SearchTrainingTypes = SearchTrainingTypes.ALL,
+    @Query('type') type: TrainingTypes,
     @Query('idInstructor') idInstructor?: number
   ) {
     if (idInstructor) {
@@ -27,16 +27,12 @@ export class TrainingsController {
 
   @Get('search')
   @ApiQuery({ name: 'text', required: true })
-  async search(
-    @Query('text') text: string
-  ) {
+  async search(@Query('text') text: string) {
     return await this.trainingService.findByText(text);
   }
 
   @Get('get/:id')
-  async findById(
-    @Param('id') id: number
-  ) {
+  async findById(@Param('id') id: number) {
     return await this.trainingService.findById(id);
   }
 
@@ -49,5 +45,21 @@ export class TrainingsController {
     delete trainingResponse.user;
 
     return trainingResponse;
+  }
+
+  @Patch('update/:id')
+  async update(
+    @Param('id') id: number,
+    @Body() trainingData: UpdateTrainingDto
+  ) {
+    return await this.trainingService.update(id, trainingData);
+  }
+
+  @Patch('deactivate/:id')
+  async deactivate(@Param('id') id: number) {
+    return {
+      deleted: true,
+      training: this.trainingService.deactivate(id)
+    }
   }
 }

@@ -6,3 +6,9 @@ export class CreateTrainingDto {
   type: TrainingTypes;
   storage: number;
 }
+
+export class UpdateTrainingDto {
+  title: string;
+  description: string;
+  // type: TrainingTypes;
+}
