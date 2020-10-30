@@ -49,7 +49,7 @@ export class User {
     type: 'enum',
     enum: AppRoles
   })
-  role: string;
+  role: AppRoles;
 
   @Column({
     type: 'varchar',

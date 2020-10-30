@@ -23,7 +23,7 @@ export class Training {
     type: 'enum',
     enum: TrainingTypes
   })
-  type: string;
+  type: TrainingTypes;
 
   @Column({
     type: 'boolean',

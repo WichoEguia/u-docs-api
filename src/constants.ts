@@ -12,3 +12,8 @@ export enum TrainingTypes {
   PRIVATE = 'Private',
   PUBLIC = 'Public'
 }
+
+export enum PaymentMethods {
+  PAYPAL = 'Paypal',
+  OPENPAY = 'Openpay'
+}
