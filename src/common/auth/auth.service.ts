@@ -33,7 +33,7 @@ export class AuthService {
     plainTextPaword: string,
   ): Promise<User> {
     try {
-      const user = await this.usersService.findOne(email);
+      const user = await this.usersService.findByEmail(email);
       await this.validatePassword(plainTextPaword, user.password);
       user.password = undefined;
 

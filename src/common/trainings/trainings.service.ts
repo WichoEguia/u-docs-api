@@ -9,7 +9,6 @@ import { TrainingTypes } from 'src/constants';
 
 import { Training } from 'src/entities';
 import { CreateTrainingDto } from 'src/dto/training.dto';
-import { join } from 'path';
 
 @Injectable()
 export class TrainingsService {
@@ -18,26 +17,7 @@ export class TrainingsService {
     private userService: UsersService
   ) {}
 
-  async findAll(type: TrainingTypes, idInstructor?: number): Promise<Training[]> {
-    if (idInstructor) {
-      if (!type) {
-        return this.trainingRepository.find({
-          where: {
-            idUser: idInstructor
-          },
-          relations: ['user']
-        });
-      }
-
-      return this.trainingRepository.find({
-        where: {
-          type,
-          idUser: idInstructor
-        },
-        relations: ['user']
-      });
-    }
-
+  async findAll(type?: TrainingTypes): Promise<Training[]> {
     if (!type) {
       return this.trainingRepository.find({
         relations: ['user']
@@ -83,7 +63,7 @@ export class TrainingsService {
 
   async create(trainingData: CreateTrainingDto, idUser: number): Promise<Training> {
     const newTraining = await this.trainingRepository.create(trainingData);
-    newTraining.user = await this.userService.findOne(null, idUser);
+    newTraining.user = await this.userService.findById(idUser);
 
     await this.trainingRepository.save(newTraining);
     return newTraining;

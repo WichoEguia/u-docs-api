@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { ApiQuery } from "@nestjs/swagger";
+import { AuthGuard } from '@nestjs/passport';
 
 import { TrainingTypes } from 'src/constants';
 
 import { TrainingsService } from './trainings.service';
 import { CreateTrainingDto, UpdateTrainingDto } from 'src/dto/training.dto';
-import { ApiQuery } from "@nestjs/swagger";
 
 @Controller('trainings')
 export class TrainingsController {
@@ -14,14 +15,7 @@ export class TrainingsController {
 
   @Get()
   @ApiQuery({ name: 'type', enum: TrainingTypes, required: false })
-  @ApiQuery({ name: 'idInstructor', required: false })
-  async findAll(
-    @Query('type') type: TrainingTypes,
-    @Query('idInstructor') idInstructor?: number
-  ) {
-    if (idInstructor) {
-      return await this.trainingService.findAll(type, idInstructor);  
-    }
+  async findAll(@Query('type') type?: TrainingTypes) {
     return await this.trainingService.findAll(type);
   }
 

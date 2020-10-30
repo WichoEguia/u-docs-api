@@ -32,10 +32,8 @@ export class UsersController {
   }
 
   @Get('get/:id')
-  async findOne(
-    @Param('id') id: number
-  ): Promise<User> {
-    return this.usersService.findOne(null, id);
+  async findById(@Param('id') id: number): Promise<User> {
+    return this.usersService.findById(id);
   }
 
   @Patch('update/:id')
