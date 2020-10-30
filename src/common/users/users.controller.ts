@@ -15,9 +15,7 @@ export class UsersController {
 
   @Get()
   @ApiQuery({ name: 'role', enum: AppRoles, required: false })
-  async findAll(
-    @Query('role') role: AppRoles = AppRoles.STUDENT
-  ): Promise<User[]> {
+  async findAll(@Query('role') role: AppRoles = AppRoles.STUDENT): Promise<User[]> {
     return this.usersService.findAll(role);
   }
 

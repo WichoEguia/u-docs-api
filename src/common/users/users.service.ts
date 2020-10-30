@@ -63,15 +63,15 @@ export class UsersService {
   }
 
   async findById(id: number): Promise<User> {
-    const searchResult = await this.findByCriteria({ id });
-    if (!searchResult) {
+    const user = await this.userRepository.findOne(id);
+    if (!user) {
       throw new HttpException(
         'El usuario no existe en nuestra base de datos',
         HttpStatus.NOT_FOUND,
       );
     }
 
-    return searchResult[0];
+    return user;
   }
 
   async findByEmail(email: string): Promise<User> {
