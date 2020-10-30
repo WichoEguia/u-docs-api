@@ -27,7 +27,7 @@ export class Training {
 
   @Column({
     type: 'boolean',
-    default: true
+    default: false
   })
   is_active: boolean;
 
@@ -63,8 +63,8 @@ export class Token {
   })
   token: string;
 
-  @Column({
-    type: 'timestamp'
+  @CreateDateColumn({
+    type: "timestamp"
   })
   expiration_date: string;
 

@@ -7,6 +7,8 @@ import { CreateUserDto } from 'src/dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
+import { jwtConstants } from 'src/constants';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -65,18 +67,13 @@ export class AuthService {
     const payload = {
       id: user.idUser,
       username: user.username,
-      email: user.email,
-      isActive: user.is_active,
-      role: user.role,
-      company: user.company,
-      age: user.age,
-      phone: user.phone,
-      avatar: user.avatar
+      email: user.email
     };
 
     return {
       user,
       access_token: this.jwtService.sign(payload),
+      expires_in: jwtConstants.expirationTime
     };
   }
 }
