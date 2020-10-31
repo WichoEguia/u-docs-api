@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiQuery } from "@nestjs/swagger";
 
 import { TrainingTypes } from 'src/constants';
@@ -29,6 +29,12 @@ export class TrainingsController {
     return await this.trainingService.findById(id);
   }
 
+  @Get('instructor')
+  @ApiQuery({ name: 'id', required: true })
+  async findByInstructor(@Query('id') idInstructor: number) {
+    return await this.trainingService.findByInstructor(idInstructor);
+  }
+
   @Post('create/:idUser')
   async create(
     @Body() trainingData: CreateTrainingDto,
@@ -48,11 +54,8 @@ export class TrainingsController {
     return await this.trainingService.update(id, trainingData);
   }
 
-  @Patch('deactivate/:id')
+  @Delete('deactivate/:id')
   async deactivate(@Param('id') id: number) {
-    return {
-      deleted: true,
-      training: this.trainingService.deactivate(id)
-    }
+    return await this.trainingService.deactivate(id)
   }
 }

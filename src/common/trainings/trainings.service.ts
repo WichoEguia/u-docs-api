@@ -85,9 +85,14 @@ export class TrainingsService {
     return training;
   }
 
-  async deactivate(idTraining: number) {
+  async deactivate(idTraining: number): Promise<{
+    id: number,
+    title: string,
+    description: string,
+    is_active: boolean
+  }> {
     const training = await this.findById(idTraining);
-    if (training) {
+    if (!training) {
       throw new HttpException(
         `No se encontró la capcitación con el id: ${idTraining}`,
         HttpStatus.NOT_FOUND
@@ -95,6 +100,24 @@ export class TrainingsService {
     }
 
     training.is_active = false;
-    return training;
+    await this.trainingRepository.save(training);
+
+    const { idTraining: id, title, description, is_active } = training;
+    return {
+      id,
+      title,
+      description,
+      is_active
+    };
+  }
+
+  async findByInstructor(idInstructor: number): Promise<Training[]> {
+    const trainings = await this.trainingRepository.find({
+      where: {
+        user: idInstructor
+      }
+    })
+
+    return trainings;
   }
 }
