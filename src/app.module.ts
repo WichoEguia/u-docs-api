@@ -4,6 +4,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "src/common/auth/auth.module";
 import { UsersModule } from "src/common/users/users.module";
 import { TrainingsModule } from "./common/trainings/trainings.module";
+import { SubscriptionModule } from './common/subscriptions/subscriptions.module';
 
 import { AppController } from "./app.controller";
 
@@ -12,6 +13,7 @@ import { AppController } from "./app.controller";
     AuthModule,
     UsersModule,
     TrainingsModule,
+    SubscriptionModule,
     TypeOrmModule.forRoot({
       type: "mysql",
       host: "localhost",
