@@ -18,15 +18,15 @@ export class TrainingsController {
     return await this.trainingService.findAll(type);
   }
 
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    return await this.trainingService.findById(id);
+  }
+
   @Get('search')
   @ApiQuery({ name: 'text', required: true })
   async search(@Query('text') text: string) {
     return await this.trainingService.findByText(text);
-  }
-
-  @Get('get/:id')
-  async findById(@Param('id') id: number) {
-    return await this.trainingService.findById(id);
   }
 
   @Get('instructor')
@@ -35,10 +35,11 @@ export class TrainingsController {
     return await this.trainingService.findByInstructor(idInstructor);
   }
 
-  @Post('create/:idUser')
+  @Post()
+  @ApiQuery({ name: 'idInstructor', required: true })
   async create(
     @Body() trainingData: CreateTrainingDto,
-    @Param('idUser') idUser: number
+    @Query('idInstructor') idUser: number
   ) {
     let trainingResponse = await this.trainingService.create(trainingData, idUser);
     delete trainingResponse.user;
@@ -46,7 +47,7 @@ export class TrainingsController {
     return trainingResponse;
   }
 
-  @Patch('update/:id')
+  @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() trainingData: UpdateTrainingDto
@@ -54,7 +55,7 @@ export class TrainingsController {
     return await this.trainingService.update(id, trainingData);
   }
 
-  @Delete('deactivate/:id')
+  @Delete(':id')
   async deactivate(@Param('id') id: number) {
     return await this.trainingService.deactivate(id)
   }

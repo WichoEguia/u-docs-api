@@ -19,6 +19,11 @@ export class UsersController {
     return this.usersService.findAll(role);
   }
 
+  @Get(':id')
+  async findById(@Param('id') id: number): Promise<User> {
+    return this.usersService.findById(id);
+  }
+
   @Get('search')
   @ApiQuery({ name: 'username', required: false })
   @ApiQuery({ name: 'email', required: false })
@@ -29,12 +34,7 @@ export class UsersController {
     return await this.usersService.search(email, username);
   }
 
-  @Get('get/:id')
-  async findById(@Param('id') id: number): Promise<User> {
-    return this.usersService.findById(id);
-  }
-
-  @Patch('update/:id')
+  @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() userData: UpdateUserDto
