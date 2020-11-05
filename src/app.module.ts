@@ -1,4 +1,6 @@
 import { Module } from "@nestjs/common";
+
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { AuthModule } from "src/common/auth/auth.module";
@@ -14,15 +16,20 @@ import { AppController } from "./app.controller";
     UsersModule,
     TrainingsModule,
     SubscriptionModule,
-    TypeOrmModule.forRoot({
-      type: "mysql",
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "demodemo",
-      database: "u-docs",
-      synchronize: true,
-      entities: ["dist/**/*.entity.js"],
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        type: "mysql",
+        host: configService.get<string>('DB_HOST', '127.0.0.1'),
+        port: configService.get<number>('DB_PORT', 3306),
+        username: configService.get<string>('DB_USER', 'root'),
+        password: configService.get<string>('DB_PASS', 'demodemo'),
+        database: configService.get<string>('DB_NAME', 'u-docs'),
+        synchronize: true,
+        entities: ["dist/**/*.entity.js"],
+      })
     }),
   ],
   controllers: [AppController],
