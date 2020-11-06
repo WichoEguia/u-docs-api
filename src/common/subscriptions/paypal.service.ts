@@ -1,4 +1,5 @@
 import { HttpException, HttpService, HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from '@nestjs/config';
 
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -6,9 +7,50 @@ import { map } from 'rxjs/operators';
 @Injectable()
 export class PaypalService {
   private paypalApiUrl: string;
+  private token: string;
 
-  constructor(private httpService: HttpService) {
+  constructor(
+    private httpService: HttpService,
+    private configService: ConfigService
+  ) {
     this.paypalApiUrl = this.getPaypalBaseUrl();
+  }
+
+  private getPaypalBaseUrl(): string {
+    const environment = this.configService.get<string>('NODE_ENV', 'development');
+    return environment === 'production'
+      ? 'https://api.paypal.com'
+      : 'https://api.sandbox.paypal.com';
+  }
+
+  public getPaypalPlan(): any {
+    const plan = {
+      "name": "Subscripción U-DOCS",
+      "description": "Subscripción mensual a la plataforma U-DOCS.",
+      "type": "INFINITE",
+      "payment_definitions": [
+        {
+          "name": "Subscripción mensualRegular payment definition a U-DOCS",
+          "type": "REGULAR",
+          "frequency": "MONTH",
+          "frequency_interval": "1",
+          "amount": {
+            "value": "300",
+            "currency": "MXN"
+          },
+          "cycles": "0"
+        }
+      ],
+      "merchant_preferences": {
+        "return_url": "https://example.com",
+        "cancel_url": "https://example.com/cancel",
+        "auto_bill_amount": "YES",
+        "initial_fail_amount_action": "CONTINUE",
+        "max_fail_attempts": "0"
+      }
+    };
+
+    return plan;
   }
 
   public getPaypalToken(): Observable<string> {
@@ -54,7 +96,7 @@ export class PaypalService {
     }
   }
 
-  public createBillingPlan(token: string, paypalConfig: any): Observable<any> {
+  public createBillingPlan(token: string, paypalPlan: any): Observable<any> {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-plans/`;
     const headers = {
       'Content-Type': 'application/json',
@@ -64,7 +106,7 @@ export class PaypalService {
     try {
       return this.httpService.post(
         requestUrl,
-        paypalConfig,
+        paypalPlan,
         { headers }
       ).pipe(
         map(
@@ -139,7 +181,7 @@ export class PaypalService {
     }
   }
 
-  private getPaypalBaseUrl(): string {
-    return 'https://api.sandbox.paypal.com';
+  public activateBillingPlan(idPlan: string) {
+
   }
 }
