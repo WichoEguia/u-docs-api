@@ -4,13 +4,13 @@ import { User, Training } from './index';
 import { PaymentMethods } from 'src/constants';
 
 @Entity()
-export class Subscription {
+export class Suscription {
   @PrimaryGeneratedColumn()
-  idSubscription: number;
+  idSuscription: number;
 
   @CreateDateColumn({
     type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)"
+    nullable: true
   })
   start_at: Date;
 
@@ -61,9 +61,9 @@ export class Payment {
   })
   metadata: string;
 
-  @OneToOne(() => Subscription, {
+  @OneToOne(() => Suscription, {
     nullable: false
   })
-  @JoinColumn({ name: 'idSubscription' })
-  subscription: Subscription;
+  @JoinColumn({ name: 'idSuscription' })
+  suscription: Suscription;
 }

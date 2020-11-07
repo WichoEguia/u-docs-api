@@ -6,7 +6,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "src/common/auth/auth.module";
 import { UsersModule } from "src/common/users/users.module";
 import { TrainingsModule } from "./common/trainings/trainings.module";
-import { SubscriptionModule } from './common/subscriptions/subscriptions.module';
+import { SuscriptionModule } from './common/suscriptions/suscriptions.module';
 
 import { AppController } from "./app.controller";
 
@@ -15,7 +15,7 @@ import { AppController } from "./app.controller";
     AuthModule,
     UsersModule,
     TrainingsModule,
-    SubscriptionModule,
+    SuscriptionModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
