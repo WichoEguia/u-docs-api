@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class PlanService {
+export class PaypalService {
   private paypalApiUrl: string;
   private token: string;
 

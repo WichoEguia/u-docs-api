@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { SuscriptionController } from './suscription.controller';
 
-import { PlanService } from './plan.service';
+import { PaypalService } from './paypal.service';
 import { SuscriptionService } from "./suscriptions.service";
 
 import { Suscription } from 'src/entities';
@@ -11,6 +11,6 @@ import { Suscription } from 'src/entities';
 @Module({
   controllers: [SuscriptionController],
   imports: [HttpModule, TypeOrmModule.forFeature([Suscription])],
-  providers: [SuscriptionService, PlanService]
+  providers: [SuscriptionService, PaypalService]
 })
 export class SuscriptionModule {}

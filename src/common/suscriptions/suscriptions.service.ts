@@ -4,18 +4,18 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Suscription } from 'src/entities';
 
-import { PlanService } from './plan.service';
+import { PaypalService } from './paypal.service';
 
 @Injectable()
 export class SuscriptionService {
   constructor(
     @InjectRepository(Suscription) private suscriptionRepository: Repository<Suscription>,
-    private planServiec: PlanService
+    private paypalService: PaypalService
   ) { }
 
   async create() {
-    const token = await this.planServiec.getPaypalToken();
-    // this.paypalSershis.planServiec.getBillingPlan(plan.id);
+    const token = await this.paypalService.getPaypalToken();
+    // this.paypalSershis.paypalService.getBillingPlan(plan.id);
     return token;
   }
 }
