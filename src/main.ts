@@ -9,7 +9,7 @@ import { HttpExceptionFilter } from "./filters/http-exception.filter";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  app.use(bodyParser.json({ limit: "50mb" }));
+  // app.use(bodyParser.json({ limit: "50mb" }));
   app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());

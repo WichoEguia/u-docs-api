@@ -1,4 +1,5 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/common/users/users.service';
@@ -7,13 +8,12 @@ import { CreateUserDto } from 'src/dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
-import { jwtConstants } from 'src/constants';
-
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService
   ) {}
 
   public async register(userData: CreateUserDto): Promise<User> {
@@ -73,7 +73,7 @@ export class AuthService {
     return {
       user,
       access_token: this.jwtService.sign(payload),
-      expires_in: jwtConstants.expirationTime
+      expires_in: this.configService.get<string>('JWT_EXPIRATION')
     };
   }
 }

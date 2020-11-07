@@ -2,6 +2,7 @@ import { HttpException, HttpService, HttpStatus, Injectable } from "@nestjs/comm
 import { ConfigService } from '@nestjs/config';
 
 import { map } from 'rxjs/operators';
+import { PaypalBillingPlan } from "src/constants";
 
 @Injectable()
 export class PaypalService {
@@ -26,30 +27,30 @@ export class PaypalService {
       : 'https://api.sandbox.paypal.com';
   }
 
-  public getPaypalPlan(): any {
-    const plan = {
-      "name": "Subscripción U-DOCS",
-      "description": "Subscripción mensual a la plataforma U-DOCS.",
-      "type": "INFINITE",
-      "payment_dePaypalfinitions": [
+  public getPaypalPlan(): PaypalBillingPlan {
+    const plan: PaypalBillingPlan = {
+      name: "Subscripción U-DOCS",
+      description: "Subscripción mensual a la plataforma U-DOCS",
+      type: "INFINITE",
+      payment_definitions: [
         {
-          "name": "Subscripción mensualRegular payment definition a U-DOCS",
-          "type": "REGULAR",
-          "frequency": "MONTH",
-          "frequency_interval": "1",
-          "amount": {
-            "value": "300",
-            "currency": "MXN"
+          name: "Subscripción mensual a U-DOCS",
+          type: "REGULAR",
+          frequency: "MONTH",
+          frequency_interval: "1",
+          amount: {
+            value: "300",
+            currency: "MXN"
           },
-          "cycles": "0"
+          cycles: "0"
         }
       ],
-      "merchant_preferences": {
-        "return_url": "https://example.com",
-        "cancel_url": "https://example.com/cancel",
-        "auto_bill_amount": "YES",
-        "initial_fail_amount_action": "CONTINUE",
-        "max_fail_attempts": "1"
+      merchant_preferences: {
+        return_url: "https://example.com",
+        cancel_url: "https://example.com/cancel",
+        auto_bill_amount: "YES",
+        initial_fail_amount_action: "CONTINUE",
+        max_fail_attempts: "1"
       }
     };
 
@@ -66,11 +67,11 @@ export class PaypalService {
     };
 
     const auth = {
-      'username': 'AWh0P8xLkJTvC8fl1EBpyNaunWJ7lEJxmNhfV5EGFURG5JajxmzujNvphew5Q0-fhna3J7kcL0Wyl97L',
-      'password': 'EFSOx-xK8iq0Ni7CsjqyhnbFGLrWTfpCn7kJEUd1FAgQ2oW3aRrlHW-NyLfhvFaOHOEe6TDy0kD0YXxw'
+      'username': this.configService.get<string>('PAYPAL_KEY'),
+      'password': this.configService.get<string>('PAYPAL_SECRET')
     }
 
-    return await this.httpService
+    return this.httpService
       .post(requestUrl, null, { 
         headers, 
         auth, 
@@ -94,7 +95,7 @@ export class PaypalService {
       .toPromise<string>();
   }
 
-  public async createBillingPlan(): Promise<any> {
+  public createBillingPlan(): Promise<unknown> {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-plans/`;
 
     const paypalPlan = this.getPaypalPlan();
@@ -103,21 +104,9 @@ export class PaypalService {
       'Authorization': `Bearer ${this.token}`
     };
 
-    return await this.httpService
+    return this.httpService
       .post(requestUrl, paypalPlan, { headers })
-      .pipe(map(res => {
-          const { data } = res;
-
-          if (!data.hasOwnProperty('id')) {
-            throw new HttpException(
-              'No se pudo crear el plan.',
-              HttpStatus.INTERNAL_SERVER_ERROR
-            )
-          }
-
-          return data;
-        }
-      ))
+      .pipe(map((res: any) => res.data))
       .toPromise();
   }
 

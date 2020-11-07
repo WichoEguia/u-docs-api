@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Suscription } from 'src/entities';
@@ -14,8 +14,20 @@ export class SuscriptionService {
   ) { }
 
   async create() {
-    const token = await this.paypalService.getPaypalToken();
-    // this.paypalSershis.paypalService.getBillingPlan(plan.id);
-    return token;
+    // try {
+      this.paypalService.setToken(
+        await this.paypalService
+          .getPaypalToken()
+      );
+      const plan = await this.paypalService.createBillingPlan();
+      // return await this.paypalService.getBillingPlan(plan.id);
+      return plan;
+    // } catch (error) {
+    //   // return error;
+    //   throw new HttpException(
+    //     `Ha ocurrido un error al procesar la solicitud`,
+    //     HttpStatus.BAD_REQUEST
+    //   )
+    // }
   }
 }
