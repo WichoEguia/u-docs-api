@@ -24,6 +24,7 @@ export interface PaymentDefinitions {
 }
 
 export interface PaypalBillingPlan {
+  id?: string,
   name: string,
   description: string,
   type: 'FIXED' | 'INFINITE',
