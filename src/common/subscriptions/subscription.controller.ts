@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query } from "@nestjs/common";
+import { Controller, Get, Post, Patch, Query, Param } from "@nestjs/common";
 
 import { PaymentMethods } from "src/constants";
 
@@ -17,19 +17,11 @@ export class SubscriptionController {
     return await this.subscriptionService.create(method, idTraining, idUser);
   }
 
-  // @Post('activate/:idPlan')
-  // activate(
-  //   @Res() response: Response,
-  //   @Param('idPlan') id: string
-  // ) {
-  //   this.getToken(
-  //     token => {
-  //       this.paypalService
-  //         .activateBillingPlan(token, id)
-  //         .subscribe(res_activate => {
-            
-  //         });
-  //     }
-  //   )
-  // }
+  @Patch('activate/:id')
+  async activate(@Param('id') id: number) {
+    const result = await this.subscriptionService.activateSubscription(id);
+    return {
+      isActivated: result
+    }
+  }
 }
