@@ -3,7 +3,7 @@ import { AppRoles } from 'src/constants';
 
 export class CreateUserDto {
   @IsString()
-  @Length(5, 50)
+  @Length(3, 50)
   username: string;
 
   @IsEmail()

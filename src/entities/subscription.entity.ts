@@ -4,21 +4,32 @@ import { User, Training } from './index';
 import { PaymentMethods } from 'src/constants';
 
 @Entity()
-export class Suscription {
+export class Subscription {
   @PrimaryGeneratedColumn()
-  idSuscription: number;
+  idSubscription: number;
 
   @CreateDateColumn({
     type: "timestamp",
     nullable: true
   })
-  start_at: Date;
+  start_at: string;
 
   @Column({
     type: 'boolean',
-    default: true
+    default: false
   })
   is_active: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: PaymentMethods
+  })
+  method: PaymentMethods;
+
+  @Column({
+    type: 'longtext'
+  })
+  metadata: string;
 
   @OneToOne(() => User, {
     nullable: false
@@ -48,22 +59,16 @@ export class Payment {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)'
   })
-  date: Date;
-
-  @Column({
-    type: 'enum',
-    enum: PaymentMethods
-  })
-  method: PaymentMethods;
+  date: string;
 
   @Column({
     type: 'longtext'
   })
   metadata: string;
 
-  @OneToOne(() => Suscription, {
+  @OneToOne(() => Subscription, {
     nullable: false
   })
-  @JoinColumn({ name: 'idSuscription' })
-  suscription: Suscription;
+  @JoinColumn({ name: 'idSubscription' })
+  subscription: Subscription;
 }

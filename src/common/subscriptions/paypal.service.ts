@@ -95,7 +95,7 @@ export class PaypalService {
       .toPromise<string>();
   }
 
-  public createBillingPlan(): Promise<unknown> {
+  public createBillingPlan(): Promise<any> {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-plans/`;
 
     const paypalPlan = this.getPaypalPlan();
@@ -137,7 +137,7 @@ export class PaypalService {
       .toPromise();
   }
 
-  public async activateBillingPlan(idPlan: string): Promise<void> {
+  public async activateBillingPlan(idPlan: string): Promise<boolean> {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-plans/${idPlan}`;
     
     const headers = {
@@ -155,9 +155,10 @@ export class PaypalService {
       }
     ];
 
-    await this.httpService
+    const res = await this.httpService
       .patch(requestUrl, data, { headers })
-      .pipe(map(res => res.data))
       .toPromise();
+
+    return res.status === 200;
   }
 }

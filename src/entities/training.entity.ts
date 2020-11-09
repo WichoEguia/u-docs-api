@@ -35,14 +35,14 @@ export class Training {
     type: "timestamp",
     default: () => "CURRENT_TIMESTAMP(6)"
   })
-  created_at: Date;
+  created_at: string;
 
   @CreateDateColumn({
     type: 'timestamp',
     nullable: true,
     onUpdate: "CURRENT_TIMESTAMP(6)"
   })
-  updated_at: Date;
+  updated_at: string;
 
   @ManyToOne(() => User, user => user.trainings)
   @JoinColumn({ name: "idUser" })
