@@ -21,8 +21,20 @@ export class SubscriptionService {
     private usersService: UsersService
   ) { }
 
+  public async getAll() {
+    return await this.subscriptionRepository.find();
+  }
+
   public async findById(idSubscription: number): Promise<Subscription> {
-    return this.subscriptionRepository.findOne(idSubscription);
+    const subscription = this.subscriptionRepository.findOne(idSubscription);
+    if (!subscription) {
+      throw new HttpException(
+        'No se encontró la suscripción',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return subscription;
   }
 
   public async create(method: PaymentMethods, idTraining: number, idUser: number) {
@@ -67,16 +79,23 @@ export class SubscriptionService {
     idTraining: number,
     idUser: number
   ): Promise<Subscription> {
-    let subscription = await this.subscriptionRepository.create({
-      is_active: false,
-      start_at: new Date().toISOString(),
-      method: method,
-      metadata: JSON.stringify(plan),
-      training: await this.trainingsService.findById(idTraining),
-      user: await this.usersService.findById(idUser)
-    });
-    
-    return await this.subscriptionRepository.save(subscription);
+    try {
+      let subscription = await this.subscriptionRepository.create({
+        is_active: false,
+        start_at: new Date().toISOString(),
+        method: method,
+        metadata: JSON.stringify(plan),
+        training: await this.trainingsService.findById(idTraining),
+        user: await this.usersService.findById(idUser)
+      });
+      
+      return await this.subscriptionRepository.save(subscription);
+    } catch (error) {
+      throw new HttpException(
+        'No se logró crear la suscripción',
+        HttpStatus.BAD_REQUEST
+      ); 
+    }
   }
 
   public async activateSubscription(idSubscription: number): Promise<boolean> {

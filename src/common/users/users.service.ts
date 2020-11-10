@@ -54,7 +54,7 @@ export class UsersService {
     const findedUser = await this.findByCriteria(searchCriteria);
     if (!findedUser) {
       throw new HttpException(
-        'Sin resultados',
+        'No se encontró el usuario',
         HttpStatus.NOT_FOUND
       );
     }
