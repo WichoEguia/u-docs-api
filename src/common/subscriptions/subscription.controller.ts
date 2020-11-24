@@ -30,12 +30,4 @@ export class SubscriptionController {
   ) {
     return await this.subscriptionService.create(method, idTraining, idUser);
   }
-
-  @Patch('activate/:id')
-  async activate(@Param('id') id: number) {
-    const result = await this.subscriptionService.activateSubscription(id);
-    return {
-      isActivated: result
-    }
-  }
 }

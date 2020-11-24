@@ -2,7 +2,8 @@ import { HttpException, HttpService, HttpStatus, Injectable } from "@nestjs/comm
 import { ConfigService } from '@nestjs/config';
 
 import { map } from 'rxjs/operators';
-import { PaypalBillingPlan } from "src/constants";
+
+import { PaypalBillingAgreement, PaypalBillingPlan } from "src/constants";
 
 @Injectable()
 export class PaypalService {
@@ -27,7 +28,7 @@ export class PaypalService {
       : 'https://api.sandbox.paypal.com';
   }
 
-  public getPaypalPlan(): PaypalBillingPlan {
+  private getPaypalPlanData(): PaypalBillingPlan {
     const plan: PaypalBillingPlan = {
       name: "Subscripción U-DOCS",
       description: "Subscripción mensual a la plataforma U-DOCS",
@@ -55,6 +56,22 @@ export class PaypalService {
     };
 
     return plan;
+  }
+
+  private getPaypalAgreementData(planId: string): PaypalBillingAgreement  {
+    const agreement: PaypalBillingAgreement = {
+      name: 'Activación del curso',
+      description: 'Suscripción para la activación de curso U-DOCS',
+      start_date: new Date().toISOString(),
+      payer: {
+        payment_method: 'paypal'
+      },
+      plan: {
+        id: planId
+      }
+    }
+
+    return agreement;
   }
 
   public async getPaypalToken(): Promise<string> {
@@ -98,7 +115,7 @@ export class PaypalService {
   public createBillingPlan(): Promise<any> {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-plans/`;
 
-    const paypalPlan = this.getPaypalPlan();
+    const paypalPlan = this.getPaypalPlanData();
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
@@ -161,4 +178,19 @@ export class PaypalService {
 
     return res.status === 200;
   }
+
+  public createBillingAgreement(planId: string): Promise<PaypalBillingAgreement> {
+    const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-agreements/`;
+
+    const paypalAgreement = this.getPaypalAgreementData(planId);
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.token}`
+    };
+
+    return this.httpService
+      .post(requestUrl, paypalAgreement, { headers })
+      .pipe(map((res: any) => res.data))
+      .toPromise();
+  }  
 }

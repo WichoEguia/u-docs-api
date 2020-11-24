@@ -45,7 +45,7 @@ export class SubscriptionService {
       );
 
       const plan = await this.createBillingPlan();
-      const subscription = await this.createSubscription(
+      const subscription = await this.createSubscriptionRecord(
         plan,
         method,
         idTraining,
@@ -73,7 +73,7 @@ export class SubscriptionService {
     return plan;
   }
 
-  private async createSubscription(
+  private async createSubscriptionRecord(
     plan: PaypalBillingPlan,
     method: PaymentMethods,
     idTraining: number,
@@ -98,7 +98,7 @@ export class SubscriptionService {
     }
   }
 
-  public async activateSubscription(idSubscription: number): Promise<boolean> {
+  private async activateSubscription(idSubscription: number, metadata: any): Promise<boolean> {
     const subscription = await this.findById(idSubscription);
     if (subscription.is_active) {
       throw new HttpException(
@@ -119,11 +119,35 @@ export class SubscriptionService {
 
     await this.subscriptionRepository.update(subscription.idSubscription, {
       is_active: true,
-      metadata: JSON.stringify(
-        await this.paypalService.getBillingPlan(plan.id)
-      )
+      metadata
     });
     
     return subscription.is_active;
+  }
+
+  public async createAgreement(idSubscription: number, idPlan: string): Promise<Subscription> {
+    try {
+      this.paypalService.setToken(
+        await this.paypalService
+          .getPaypalToken()
+      );
+
+      const agreement = await this.paypalService.createBillingAgreement(idPlan);
+      const isSubscriptionActive = await this.activateSubscription(idSubscription, JSON.stringify(agreement));
+
+      if (isSubscriptionActive) {
+        throw new HttpException(
+          'No se ha podido activar el plan',
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      return await this.findById(idSubscription);
+    } catch (error) {
+      throw new HttpException(
+        `Ha ocurrido un error al procesar la solicitud`,
+        HttpStatus.BAD_REQUEST
+      );
+    }
   }
 }
