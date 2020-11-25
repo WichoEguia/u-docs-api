@@ -3,7 +3,7 @@ import { ApiQuery } from "@nestjs/swagger";
 
 import { PaymentMethods } from "src/constants";
 
-import { SubscriptionService } from './subscriptions.service';
+import { SubscriptionService } from '../../services/subscriptions.service';
 
 @Controller('subscriptions')
 export class SubscriptionController {

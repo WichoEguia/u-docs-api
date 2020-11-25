@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Training } from 'src/entities';
 import { TrainingsController } from "./trainings.controller";
-import { TrainingsService } from './trainings.service';
+import { TrainingsService } from '../../services/trainings.service';
 
 import { UsersModule } from 'src/common/users/users.module';
 

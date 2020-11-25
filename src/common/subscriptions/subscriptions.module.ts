@@ -5,8 +5,8 @@ import { UsersModule } from '../users/users.module';
 
 import { SubscriptionController } from './subscription.controller';
 
-import { PaypalService } from './paypal.service';
-import { SubscriptionService } from "./subscriptions.service";
+import { PaypalService } from 'src/services/paypal.service';
+import { SubscriptionService } from "../../services/subscriptions.service";
 
 import { Subscription } from 'src/entities';
 

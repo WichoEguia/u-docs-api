@@ -1,15 +1,14 @@
-import { PaypalBillingPlan } from 'src/constants';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Repository } from 'typeorm';
 
-import { PaymentMethods } from 'src/constants';
+import { PaymentMethods, PaypalBillingPlan } from 'src/constants';
 
 import { InjectRepository } from "@nestjs/typeorm";
 import { Subscription } from 'src/entities';
 
 import { PaypalService } from './paypal.service';
-import { TrainingsService } from '../trainings/trainings.service';
-import { UsersService } from '../users/users.service';
+import { TrainingsService } from './trainings.service';
+import { UsersService } from './users.service';
 
 @Injectable()
 export class SubscriptionService {

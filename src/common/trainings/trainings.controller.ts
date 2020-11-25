@@ -3,7 +3,7 @@ import { ApiQuery } from "@nestjs/swagger";
 
 import { TrainingTypes } from 'src/constants';
 
-import { TrainingsService } from './trainings.service';
+import { TrainingsService } from '../../services/trainings.service';
 import { CreateTrainingDto, UpdateTrainingDto } from 'src/dto/training.dto';
 
 @Controller('trainings')

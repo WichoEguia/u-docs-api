@@ -1,5 +1,5 @@
-import { UpdateTrainingDto } from './../../dto/training.dto';
-import { UsersService } from 'src/common/users/users.service';
+import { UpdateTrainingDto } from '../dto/training.dto';
+import { UsersService } from 'src/services/users.service';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { InjectRepository } from "@nestjs/typeorm";

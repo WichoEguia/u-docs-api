@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 
 import { User } from 'src/entities/user.entity';
-import { UsersService } from './users.service';
+import { UsersService } from '../../services/users.service';
 import { UpdateUserDto } from 'src/dto';
 
 import { AppRoles } from 'src/constants';

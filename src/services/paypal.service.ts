@@ -2,7 +2,6 @@ import { HttpException, HttpService, HttpStatus, Injectable } from "@nestjs/comm
 import { ConfigService } from '@nestjs/config';
 
 import { map } from 'rxjs/operators';
-
 import { PaypalBillingAgreement, PaypalBillingPlan } from "src/constants";
 
 @Injectable()
