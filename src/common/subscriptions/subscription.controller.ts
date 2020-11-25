@@ -30,4 +30,9 @@ export class SubscriptionController {
   ) {
     return await this.subscriptionService.create(method, idTraining, idUser);
   }
+
+  @Patch(':id')
+  async initAgreement(@Param('id') id: number) {
+    return await this.subscriptionService.createAgreement(id);
+  }
 }

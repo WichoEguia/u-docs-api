@@ -98,7 +98,7 @@ export class SubscriptionService {
     }
   }
 
-  private async activateSubscription(idSubscription: number, metadata: any): Promise<boolean> {
+  private async activateBillingPlan(idSubscription: number, metadata: any): Promise<boolean> {
     const subscription = await this.findById(idSubscription);
     if (subscription.is_active) {
       throw new HttpException(
@@ -125,27 +125,37 @@ export class SubscriptionService {
     return subscription.is_active;
   }
 
-  public async createAgreement(idSubscription: number, idPlan: string): Promise<Subscription> {
+  public async createAgreement(idSubscription: number): Promise<Subscription> {
     try {
       this.paypalService.setToken(
         await this.paypalService
           .getPaypalToken()
       );
 
+      const { metadata } = await this.findById(idSubscription);
+      const idPlan = JSON.parse(metadata).id;
+      
+      if (!idPlan) {
+        throw new HttpException(
+          'No existe el plan en la subscripción',
+          HttpStatus.BAD_REQUEST
+        );
+      }
+    
       const agreement = await this.paypalService.createBillingAgreement(idPlan);
-      const isSubscriptionActive = await this.activateSubscription(idSubscription, JSON.stringify(agreement));
-
-      if (isSubscriptionActive) {
+      const isPlanActive = await this.activateBillingPlan(idSubscription, JSON.stringify(agreement));
+  
+      if (!isPlanActive) {
         throw new HttpException(
           'No se ha podido activar el plan',
           HttpStatus.BAD_REQUEST
         );
       }
-
+  
       return await this.findById(idSubscription);
     } catch (error) {
       throw new HttpException(
-        `Ha ocurrido un error al procesar la solicitud`,
+        'No se ha podido crear el agreement',
         HttpStatus.BAD_REQUEST
       );
     }

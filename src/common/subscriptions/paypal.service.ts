@@ -183,6 +183,8 @@ export class PaypalService {
     const requestUrl = `${this.paypalApiUrl}/v1/payments/billing-agreements/`;
 
     const paypalAgreement = this.getPaypalAgreementData(planId);
+    console.log(paypalAgreement);
+    
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.token}`
